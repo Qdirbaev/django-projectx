@@ -1,0 +1,102 @@
+{% extends 'xgame/base.html' %}
+
+{% block content %}
+<div class="row g-3 py-3">
+
+    <!-- Sidebar -->
+    <div class="col-lg-3 order-lg-2">
+        <div class="panel">
+            {% include 'xgame/components/_categories.html' %}
+        </div>
+    </div>
+
+    <!-- Game info -->
+    <div class="col-lg-9 order-lg-1">
+        <div class="d-flex flex-column flex-sm-row gap-4">
+            <img
+                    src="{{ game.get_image_game }}"
+                    alt="{{ game.title }}"
+                    class="game-poster"
+            />
+            <div class="text-light d-flex flex-column justify-content-center">
+                <h3 class="fw-bold">{{ game.title }}</h3>
+                <hr/>
+                <p class="mb-1 text-secondary">Date: <span class="text-white">{{ game.created_at|date:"M d, Y" }}</span></p>
+                <p class="mb-0 text-secondary">Genre: <span class="text-white">{{ game.category }}</span></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Description -->
+<div class="mb-4">
+    <a class="section-title d-inline-block text-decoration-none" data-bs-toggle="collapse"
+       href="#collapseDescription" role="button" aria-expanded="false" aria-controls="collapseDescription">
+        Description
+    </a>
+    <div class="collapse" id="collapseDescription">
+        <div class="panel mt-3">{{ game.description|linebreaks }}</div>
+    </div>
+</div>
+
+<!-- Trailer -->
+{% if game.video %}
+<div class="mb-4">
+    <h4 class="section-title mb-3">Trailer</h4>
+    <video class="video-frame" preload="metadata" controls poster="{{ game.get_image_game }}">
+        <source src="{{ game.get_video }}" type="video/mp4">
+    </video>
+</div>
+{% endif %}
+
+<!-- Torrent -->
+<div class="d-flex justify-content-center mb-4">
+    {% if game.torrent %}
+    <a href="{% url 'download' game.pk %}" class="btn btn-danger download">Download Torrent</a>
+    {% else %}
+    <h5 class="text-secondary">Torrent will be available soon!</h5>
+    {% endif %}
+</div>
+
+<!-- Similar games -->
+{% if games %}
+<div class="mb-4">
+    <h4 class="section-title mb-3">Similar games</h4>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+        {% for game in games %}
+        {% include 'xgame/components/_card.html' %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Comments -->
+<div class="mb-3">
+    <h4 class="section-title mb-3">Comments: {{ comments|length }}</h4>
+    {% if request.user.is_authenticated %}
+    <form action="{% url 'comment_save' game.pk %}" method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button class="btn btn-danger" type="submit">Comment!</button>
+    </form>
+    {% else %}
+    <p class="text-secondary"><a href="{% url 'login' %}" class="link-danger">Log in!</a> to comment!</p>
+    {% endif %}
+</div>
+
+<div class="mt-4 pb-3">
+    {% for comment in comments %}
+    <div class="comment d-flex mb-3">
+        <div class="avatar">{{ comment.user.username|slice:":1"|upper }}</div>
+        <div class="ms-3 flex-grow-1">
+            <h6 class="mb-1">
+                {{ comment.user.username }}
+                <span class="comment_data">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+            </h6>
+            <p class="mb-0">{{ comment.text|linebreaksbr }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

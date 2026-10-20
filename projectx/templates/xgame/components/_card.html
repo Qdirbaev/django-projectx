@@ -1,0 +1,15 @@
+<div class="col">
+    <a href="{{ game.get_absolute_url }}" class="text-decoration-none">
+        <div class="card game-card h-100">
+            <img
+                    src="{{ game.get_image_game }}"
+                    class="card-img-top"
+                    alt="{{ game.title }}"
+            />
+            <div class="card-body">
+                <h6 class="card-title text-truncate mb-1">{{ game.title }}</h6>
+                <small class="text-secondary">{{ game.created_at|date:"M d, Y" }}</small>
+            </div>
+        </div>
+    </a>
+</div>

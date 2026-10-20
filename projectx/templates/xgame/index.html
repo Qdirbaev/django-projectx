@@ -1,0 +1,25 @@
+{% extends 'xgame/base.html' %}
+
+{% block content %}
+<div class="row g-3 py-3">
+
+    <!-- Sidebar -->
+    <div class="col-lg-3 order-lg-2">
+        <div class="panel">
+            {% include 'xgame/components/_categories.html' %}
+        </div>
+    </div>
+
+    <!-- Games grid -->
+    <div class="col-lg-9 order-lg-1">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
+            {% for game in games %}
+            {% include 'xgame/components/_card.html' %}
+            {% empty %}
+            <p class="text-secondary">No games found.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'xgame/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+    <div class="col-12 col-md-8 col-lg-5">
+        <div class="card auth-card p-4">
+            <h5 class="text-center mb-3">Registration</h5>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button class="btn btn-danger w-100" type="submit">Register!</button>
+
+                <hr>
+                <p class="mb-2 text-secondary">Already have an account?</p>
+                <a href="{% url 'login' %}" class="btn btn-outline-danger w-100">Log in!</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
